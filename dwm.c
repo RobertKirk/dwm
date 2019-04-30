@@ -59,7 +59,6 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
@@ -193,7 +192,10 @@ static void resizeclient(Client *c, int x, int y, int w, int h);
 static void resizemouse(const Arg *arg);
 static void restack(Monitor *m);
 static void run(void);
+static void runAutostart(void);
 static void scan(void);
+static void schemeCycle(const Arg*);
+static void schemeToggle(const Arg*);
 static int sendevent(Client *c, Atom proto);
 static void sendmon(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
@@ -263,6 +265,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 };
 static Atom wmatom[WMLast], netatom[NetLast];
 static int restart = 0;
+static int SchemeNorm = 0, SchemeSel = 1;
 static int running = 1;
 static Cur *cursor[CurLast];
 static Clr **scheme;
@@ -705,7 +708,7 @@ drawbar(Monitor *m)
 	Client *c;
 
 	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
+	if (m == selmon || 1) { /* status is only drawn on selected monitor */
 		drw_setscheme(drw, scheme[SchemeNorm]);
 		sw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
 		drw_text(drw, m->ww - sw, 0, sw, bh, 0, stext, 0);
@@ -1393,6 +1396,12 @@ run(void)
 }
 
 void
+runAutostart(void) {
+	system("cd ~/.dwm; ./autostart_blocking.sh");
+	system("cd ~/.dwm; ./autostart.sh &");
+}
+
+void
 scan(void)
 {
 	unsigned int i, num;
@@ -1417,6 +1426,42 @@ scan(void)
 		if (wins)
 			XFree(wins);
 	}
+}
+
+void
+schemeCycle(const Arg *arg) {
+
+	if ((SchemeSel + 2) < LENGTH(colors))
+	{
+		SchemeNorm += 2;
+		SchemeSel += 2;
+	} else {
+		SchemeNorm = 0;
+		SchemeSel = 1;
+	}
+
+	drawbars();
+}
+
+void
+schemeToggle(const Arg *arg) {
+
+	int numThemePairs = LENGTH(colors) / 4;
+	int sheme = SchemeNorm / 2;
+
+	if (sheme / 2 > numThemePairs-1) {
+		return;
+	}
+
+	if (sheme % 2 == 0) {
+		SchemeNorm += 2;
+		SchemeSel += 2;
+	} else {
+		SchemeNorm -= 2;
+		SchemeSel -= 2;
+	}
+
+	drawbars();
 }
 
 void
@@ -2016,9 +2061,11 @@ updatesizehints(Client *c)
 void
 updatestatus(void)
 {
+    Monitor* m;
 	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
 		strcpy(stext, "dwm-"VERSION);
-	drawbar(selmon);
+    for(m = mons; m; m = m->next)
+        drawbar(m);
 }
 
 void
@@ -2171,6 +2218,7 @@ main(int argc, char *argv[])
 		die("pledge");
 #endif /* __OpenBSD__ */
 	scan();
+    runAutostart();
 	run();
 	if(restart) execvp(argv[0], argv);
 	cleanup();

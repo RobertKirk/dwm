@@ -13,10 +13,26 @@ static const char col_gray2[]       = "#eee8d5";
 static const char col_gray3[]       = "#839496";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+
+/* solarized colors http://ethanschoonover.com/solarized */
+static const char s_base03[]        = "#002b36";
+static const char s_base02[]        = "#073642";
+static const char s_base01[]        = "#586e75";
+static const char s_base00[]        = "#657b83";
+static const char s_base0[]         = "#839496";
+static const char s_base1[]         = "#93a1a1";
+static const char s_base2[]         = "#eee8d5";
+static const char s_base3[]         = "#fdf6e3";
+
+
 static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray1, col_gray3, col_gray2 },
+	/* fg         bg         border   */
+	{s_base0, s_base03, s_base2 },
+	{s_base0, s_base02, s_base2 },
+	{ s_base00, s_base3, s_base02 },     /* SchemeNorm light */
+	{ s_base00, s_base2, s_base02},      /* SchemeSel light */
+	{ col_gray3, col_gray1, col_gray2 }, /* SchemeNorm orig */
+	{ col_gray4, col_cyan,  col_cyan  }, /* SchemeSel orig */
 };
 
 /* tagging */
@@ -57,7 +73,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *termcmd[]  = { "st", NULL };
-static const char *dmenucmd[]   = { "dmenu-wrapper",   NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *lockcmd[]    = { "dwm-screen-lock", NULL };
 static const char *volmutecmd[] = { "dwm-volume-mute", NULL };
 static const char *volupcmd[]   = { "dwm-volume-up",   NULL };
@@ -93,6 +109,8 @@ static Key keys[] = {
     { 0,              XF86XK_AudioMute,        spawn,          {.v = volmutecmd } },
     { 0,              XF86XK_AudioLowerVolume, spawn,          {.v = voldowncmd } },
     { 0,              XF86XK_AudioRaiseVolume, spawn,          {.v = volupcmd   } },
+ 	{ MODKEY|ShiftMask,             XK_t,      schemeToggle,   {0} },
+	{ MODKEY|ShiftMask,             XK_z,      schemeCycle,    {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
