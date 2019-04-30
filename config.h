@@ -28,7 +28,6 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Spotify",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
@@ -90,10 +89,10 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} }, 
-    { MODKEY|ControlMask, XK_l,   spawn,      {.v = lockcmd    } },
-    { 0, XF86XK_AudioMute,        spawn,      {.v = volmutecmd } },
-    { 0, XF86XK_AudioLowerVolume, spawn,      {.v = voldowncmd } },
-    { 0, XF86XK_AudioRaiseVolume, spawn,      {.v = volupcmd   } },
+    { MODKEY|ControlMask,           XK_l,      spawn,          {.v = lockcmd    } },
+    { 0,              XF86XK_AudioMute,        spawn,          {.v = volmutecmd } },
+    { 0,              XF86XK_AudioLowerVolume, spawn,          {.v = voldowncmd } },
+    { 0,              XF86XK_AudioRaiseVolume, spawn,          {.v = volupcmd   } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
