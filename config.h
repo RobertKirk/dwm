@@ -19,7 +19,7 @@ static const char col_cyan[]        = "#005577";
 /*   Modes after showtab_nmodes are disabled                                */
 enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
 static const int showtab            = showtab_auto; /* Default tab bar show mode */
-static const Bool toptab            = False;    /* False means bottom tab bar */
+static const Bool toptab            = True;    /* False means bottom tab bar */
 
 /* solarized colors http://ethanschoonover.com/solarized */
 static const char s_base03[]        = "#002b36";

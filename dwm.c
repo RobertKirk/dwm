@@ -280,7 +280,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 };
 static Atom wmatom[WMLast], netatom[NetLast];
 static int restart = 0;
-static int SchemeNorm = 0, SchemeSel = 1;
+static int SchemeNorm = 2, SchemeSel = 3;
 static int running = 1;
 static Cur *cursor[CurLast];
 static Clr **scheme;
